@@ -24,10 +24,10 @@ public class Trap implements Comparable<Trap> {
 
 	private long time;
 	private RSTile location;
-	private String name;
+	private String[] name;
 	private trapState curState;
 
-	public Trap(long time, RSTile location, String name) {
+	public Trap(long time, RSTile location, String[] name) {
 		this.time = time;
 		this.location = location;
 		this.name = name;
@@ -58,19 +58,29 @@ public class Trap implements Comparable<Trap> {
 		this.location = location;
 	}
 
-	public String getName() {
+	public String[] getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String[] name) {
 		this.name = name;
+	}
+	
+	private boolean checkName(String name) {
+		String[] trapNames = this.getName();
+		for (int i = 0; i < trapNames.length; i++) {
+			if (name.equals(trapNames[i])) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public RSModel getModel() {
 		for (RSObject o : Objects.getAt(this.getLocation())) {
 			if (o != null) {
 				RSObjectDefinition def = o.getDefinition();
-				if (def != null && def.getName().equals(this.getName())) {
+				if (def != null && checkName(def.getName())) {
 					return o.getModel();
 				}
 			}
@@ -82,7 +92,7 @@ public class Trap implements Comparable<Trap> {
 		for (RSObject o : Objects.getAt(this.getLocation())) {
 			if (o != null) {
 				RSObjectDefinition def = o.getDefinition();
-				if (def != null && def.getName().equals(this.getName())) {
+				if (def != null && checkName(def.getName())) {
 					String[] actions = def.getActions();
 					if (actions != null && actions.length > 0) {
 						if (actions[0].equals("Check")) {
@@ -131,8 +141,8 @@ public class Trap implements Comparable<Trap> {
 			if (g.length > 0) {
 				for (RSGroundItem item : g) {
 					RSItemDefinition def = item.getDefinition();
-					if (def != null && def.getName().equals(this.getName())) {
-						if (item.click("Lay " + this.getName())) {
+					if (def != null && checkName(def.getName())) {
+						if (item.click("Lay " + def.getName())) {
 							// Wait until moving
 							for (int a = 0; a < 20
 									&& !Player.isMoving()
@@ -173,7 +183,7 @@ public class Trap implements Comparable<Trap> {
 					if (!this.getState().equals(trapState.IDLE)) {
 						RSItem[] i = Inventory.find(this.getName());
 						if (i.length > 0) {
-							if (i[0].click("Lay " + this.getName())) {
+							if (i[0].click("Lay")) {
 								for (int a = 0; a < 20
 										&& !this.getState().equals(
 												trapState.IDLE); a++) {
@@ -231,9 +241,9 @@ public class Trap implements Comparable<Trap> {
 						this.getLocation()) <= 1)) {
 			for (RSObject o : Objects.getAt(this.getLocation())) {
 				RSObjectDefinition def = o.getDefinition();
-				if (def != null && def.getName().equals(this.getName())) {
+				if (def != null && checkName(def.getName())) {
 					if (this.getState().equals(trapState.CAPTURED)) {
-						if (Clicking.click(o, "Check " + this.getName(), false)) {
+						if (Clicking.click(o, "Check " + def.getName(), false)) {
 							boolean hovering = false;
 							for (int a = 0; a < 20
 									&& this.getState().equals(
@@ -249,7 +259,7 @@ public class Trap implements Comparable<Trap> {
 							}
 						}
 					} else if (this.getState().equals(trapState.BROKEN)) {
-						if (Clicking.click(o, "Dismantle " + this.getName(),
+						if (Clicking.click(o, "Dismantle " + def.getName(),
 								false)) {
 							boolean hovering = false;
 							for (int a = 0; a < 20

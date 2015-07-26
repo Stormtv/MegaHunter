@@ -24,7 +24,7 @@ public class ScriptStatus {
 	public ScriptStatus() {
 		this.setRunning(true);
 		this.setABCUtil(new ABCUtil());
-		this.method = new HuntingMethod(10006,95,"Bird snare");
+		this.method = new HuntingMethod(10008,265,"Box trap");
 		this.traps = new ArrayList<Trap>();
 		this.trash = new int[] { 1917, 1454, 1969, 1973, 1971, 2327, 6961,
 				6963, 6965, 6962, 464, 9003, 117, 1623, 1619, 1621, 1617, 9978,
@@ -40,7 +40,7 @@ public class ScriptStatus {
 		addPreferedTile(new RSTile(home.getX()+1, home.getY()-1));
 
 		for (RSTile t : this.preferedTiles) {
-			this.addTraps(new Trap(0, t, "Bird snare"));
+			this.addTraps(new Trap(0, t, new String[] {"Box trap", "Shaking box"}));
 		}
 	}
 
