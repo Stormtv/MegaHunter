@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.tribot.api2007.types.RSObject;
 import org.tribot.api2007.types.RSObjectDefinition;
 
 import scripts.MegaHunter.Trap.trapState;
+import scripts.MegaHunter.utils.RSBuddyItem;
 
 public class Painter {
 
@@ -36,7 +38,7 @@ public class Painter {
 					}
 					for (RSObject o : Objects.getAt(t.getLocation())) {
 						RSObjectDefinition def = o.getDefinition();
-						if (def != null && def.getName().equals(t.getName())) {
+						if (def != null && t.checkName(def.getName())) {
 							Point p = o.getModel().getCentrePoint();
 							g.drawString(
 									"Time: "
@@ -52,7 +54,7 @@ public class Painter {
 					}
 				}
 			}
-			g.setColor(Color.DARK_GRAY);
+			g.setColor(Color.MAGENTA);
 			Point[] p = MegaHunt.Status.coolPoints;
 			if (p != null && p.length > 0) {
 				for (Point p1 : p) {
@@ -61,20 +63,36 @@ public class Painter {
 					}
 				}
 			}
-			g.drawString("MegaHunt v1.0", 277, 360);
+			g.setColor(Color.BLACK);
+			g.drawString("MegaHunt v1.0", 277, 320);
 			long runtime = (System.currentTimeMillis() - MegaHunt.Status
 					.getStartTime());
-			g.drawString("Time ran: " + format(runtime), 277, 380);
+			g.drawString("Time ran: " + format(runtime), 277, 340);
 			int xpGained = Skills.getXP(Skills.SKILLS.HUNTER)
 					- MegaHunt.Status.getStartXp();
-			g.drawString("Xp Gained: " + xpGained, 277, 440);
+			g.drawString("Xp Gained: " + xpGained, 277, 360);
 			int caught = xpGained / MegaHunt.Status.getMethod().getXp();
-			g.drawString("Animals Caught: " + caught, 277, 400);
+			g.drawString("Animals Caught: " + caught, 277, 380);
 			int caughtPerHour = (int) ((3600000.0 / (double) runtime) * caught);
-			g.drawString("Caught/Hr: " + caughtPerHour, 277, 420);
+			g.drawString("Caught/Hr: " + caughtPerHour, 277, 400);
 			int xpPerHour = (int) ((3600000.0 / (double) runtime) * xpGained);
-			g.drawString("Xp/Hr: " + xpPerHour, 277, 460);
+			g.drawString("Xp/Hr: " + xpPerHour, 277, 420);
+			RSBuddyItem product = MegaHunt.Status.getMethod().getProduct();
+			g.drawString("Gold: " + formatNumber(caught * product.getOverall()), 277, 440);
+			g.drawString("G/Hr: " + formatNumber(caughtPerHour * product.getOverall()), 277, 460);
 		}
+	}
+	
+	private static String formatNumber(int start) {
+		DecimalFormat nf = new DecimalFormat("0");
+		double i = start;
+		if (i >= 10000000) {
+			return nf.format((i / 1000000)) + "M";
+		}
+		if (i >= 1000) {
+			return nf.format((i / 1000)) + "k";
+		}
+		return "" + start;
 	}
 
 	private static String format(final long time) {

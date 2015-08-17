@@ -100,6 +100,7 @@ public class MouseMovementThread extends Thread {
 
 	private void click() {
 		if (p != null) {
+			if (ChooseOption.isOpen()) ChooseOption.close();
 			if (Game.getUptext().toLowerCase()
 					.contains(action.toLowerCase())
 					&& Projection.getTileBoundsPoly(p, 0).contains(
@@ -117,6 +118,7 @@ public class MouseMovementThread extends Thread {
 				}
 			}
 		} else {
+			if (ChooseOption.isOpen()) ChooseOption.close();
 			if (Game.getUptext().toLowerCase()
 					.contains(action.toLowerCase())) {
 				General.sleep(50, 150);

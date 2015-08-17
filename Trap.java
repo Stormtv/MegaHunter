@@ -66,7 +66,7 @@ public class Trap implements Comparable<Trap> {
 		this.name = name;
 	}
 	
-	private boolean checkName(String name) {
+	public boolean checkName(String name) {
 		String[] trapNames = this.getName();
 		for (int i = 0; i < trapNames.length; i++) {
 			if (name.equals(trapNames[i])) {

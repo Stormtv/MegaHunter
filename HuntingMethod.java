@@ -7,15 +7,19 @@ import org.tribot.api2007.Player;
 import org.tribot.api2007.Skills;
 import org.tribot.api2007.types.RSItem;
 
+import scripts.MegaHunter.utils.RSBuddyItem;
+
 public class HuntingMethod {
 	private final int trapId;
+	private final RSBuddyItem product;
 	private final int xp;
 	private final String trapName;
 	
-	HuntingMethod(final int trapId, final int xp, final String trapName) {
+	HuntingMethod(final int trapId, final int xp, final String trapName, int productId) {
 		this.trapId = trapId;
 		this.xp = xp;
 		this.trapName = trapName;
+		this.product = new RSBuddyItem(productId);
 	}
 
 	public String getTrapName() {
@@ -28,6 +32,10 @@ public class HuntingMethod {
 
 	public int getXp() {
 		return xp;
+	}
+	
+	public RSBuddyItem getProduct() {
+		return product;
 	}
 	
 	public boolean isTrapsSet() {
